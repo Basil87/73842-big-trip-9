@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Vasiliy Aleksandrov](https://up.htmlacademy.ru/ecmascript/9/user/73842).
-* Наставник: `Неизвестно`.
+* Наставник: `Ivan Chirva`.
 
 ---
 
