@@ -1,8 +1,8 @@
-export const createRoutTemplate = () => {
+export const createRoutTemplate = ({cities, travelDuration}) => {
   return `
     <div class="trip-info__main">
-    <h1 class="trip-info__title">Amsterdam &mdash; ... &mdash; Amsterdam</h1>
+    <h1 class="trip-info__title">${cities()}</h1>
 
-    <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;21</p>
+    <p class="trip-info__dates">${travelDuration()}</p>
     </div>`;
 };
