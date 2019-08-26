@@ -18,43 +18,47 @@ const POINTS_COUNT = 4;
 const renderTask = (taskMock) => {
   const task = new Point(taskMock);
   const taskEdit = new PointEdit(taskMock);
+  const taskElement = task.getElement();
+  const taskEditElement = taskEdit.getElement();
 
   const onEscKeyDown = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
-      pointsContainer.replaceChild(task.getElement(), taskEdit.getElement());
+      pointsContainer.replaceChild(taskElement, taskEditElement);
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
-  task.getElement()
-    .querySelector(`.event__rollup-btn`)
+  taskElement.querySelector(`.event__rollup-btn`)
     .addEventListener(`click`, () => {
-      pointsContainer.replaceChild(taskEdit.getElement(), task.getElement());
+      pointsContainer.replaceChild(taskEditElement, taskElement);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-  taskEdit.getElement().querySelectorAll(`input`)
+  taskEditElement.querySelectorAll(`input`)
   .forEach((it) => {
     it.addEventListener(`focus`, () => {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-  });
 
-  taskEdit.getElement().querySelectorAll(`input`)
-  .forEach((it) => {
     it.addEventListener(`blur`, () => {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
   });
 
-  taskEdit.getElement()
-    .querySelector(`.event`)
+  // taskEditElement.querySelectorAll(`input`)
+  // .forEach((it) => {
+  //   it.addEventListener(`blur`, () => {
+  //     document.addEventListener(`keydown`, onEscKeyDown);
+  //   });
+  // });
+
+  taskEditElement.querySelector(`.event`)
     .addEventListener(`submit`, () => {
-      pointsContainer.replaceChild(task.getElement(), taskEdit.getElement());
+      pointsContainer.replaceChild(taskElement, taskEditElement);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-  util.render(pointsContainer, task.getElement(), util.position.BEFOREEND);
+  util.render(pointsContainer, taskElement, util.position.BEFOREEND);
 };
 
 const pointMocks = new Array(POINTS_COUNT)
