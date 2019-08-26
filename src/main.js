@@ -1,3 +1,5 @@
+import {util} from '../src/util.js';
+
 import {getPoint} from '../src/data.js';
 import {getNavigation} from '../src/data.js';
 import {getFilter} from '../src/data.js';
@@ -6,12 +8,62 @@ import {getRoutInfo} from '../src/data.js';
 import {createRoutTemplate} from '../src/components/rout.js';
 import {createNavigationTemplate} from '../src/components/navigation.js';
 
-import {createFormTemplate} from '../src/components/form.js';
+import {PointEdit} from '../src/components/point-edit.js';
 import {createFilterTemplate} from '../src/components/filter.js';
 import {createContainerTemplate} from '../src/components/container.js';
-import {createCardTemplate} from '../src/components/card.js';
+import {Point} from '../src/components/point.js';
 
 const POINTS_COUNT = 4;
+
+const renderTask = (taskMock) => {
+  const task = new Point(taskMock);
+  const taskEdit = new PointEdit(taskMock);
+  const taskElement = task.getElement();
+  const taskEditElement = taskEdit.getElement();
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      pointsContainer.replaceChild(taskElement, taskEditElement);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  taskElement.querySelector(`.event__rollup-btn`)
+    .addEventListener(`click`, () => {
+      pointsContainer.replaceChild(taskEditElement, taskElement);
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+  taskEditElement.querySelectorAll(`input`)
+  .forEach((it) => {
+    it.addEventListener(`focus`, () => {
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    it.addEventListener(`blur`, () => {
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+  });
+
+  // taskEditElement.querySelectorAll(`input`)
+  // .forEach((it) => {
+  //   it.addEventListener(`blur`, () => {
+  //     document.addEventListener(`keydown`, onEscKeyDown);
+  //   });
+  // });
+
+  taskEditElement.querySelector(`.event`)
+    .addEventListener(`submit`, () => {
+      pointsContainer.replaceChild(taskElement, taskEditElement);
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+  util.render(pointsContainer, taskElement, util.position.BEFOREEND);
+};
+
+const pointMocks = new Array(POINTS_COUNT)
+                .fill(``)
+                .map(getPoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -22,14 +74,6 @@ const renderFilter = (container) => {
     .fill(``)
     .map(getFilter)
     .map(createFilterTemplate)
-    .join(``));
-};
-
-const renderPoints = (container, count) => {
-  container.insertAdjacentHTML(`beforeend`, new Array(count)
-    .fill(``)
-    .map(getPoint)
-    .map(createCardTemplate)
     .join(``));
 };
 
@@ -57,10 +101,6 @@ const siteTripControlsTitleElement = siteTripControlsElement.querySelector(`h2`)
 renderNavigation(siteTripControlsTitleElement);
 renderFilter(siteTripControlsElement);
 render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
-
-const eventsListElement = siteTripEventsElement.querySelector(`.trip-events__list`);
-
-render(eventsListElement, createFormTemplate(), `beforeend`);
-
-renderPoints(eventsListElement, POINTS_COUNT);
+const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
+pointMocks.forEach((pointMock) => renderTask(pointMock));
 renderRoutInfo(siteTripInfoElement);

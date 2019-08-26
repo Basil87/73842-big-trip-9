@@ -32,7 +32,7 @@ export const getPoint = () => ({
     `Tomsk`,
   ][Math.floor(Math.random() * 8)],
   sightseeiengImg: `http://picsum.photos/300/150?r=${Math.random()}`,
-  description: new Set([
+  description: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget.`,
     `Fusce tristique felis at fermentum pharetra.`,
@@ -44,7 +44,7 @@ export const getPoint = () => ({
     `Aliquam erat volutpat.`,
     `Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus.`,
-  ]),
+  ].map((it) => Math.round(Math.random()) ? it : ``).filter(Boolean).slice(0, 3),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
   price: 10 + Math.floor(Math.random() * 300),
   additionalOptions: new Map([
@@ -72,13 +72,12 @@ export const getFilter = () => ({
 export const getRoutInfo = () => ({
   cities: () => {
     const eventsElements = document.querySelectorAll(`.trip-events__item`);
-    let rout = [];
-    for (const it of eventsElements) {
+
+    const rout = Array.from(eventsElements).reduce((result, it) => {
       const destinationElements = it.querySelector(`.event__input--destination`);
-      if (destinationElements !== null) {
-        rout.push(destinationElements.value);
-      }
-    }
+      return destinationElements ? [...result, destinationElements.value] : result;
+    }, []);
+
     if (rout.length > 3) {
       return `${rout[0]} — ... — ${rout[rout.length - 1]}`;
     }
@@ -87,7 +86,6 @@ export const getRoutInfo = () => ({
   },
   travelDuration: () => {
     const eventsElements = document.querySelectorAll(`.trip-events__item`);
-    return `${eventsElements[0].querySelector(`[id*="event-start-time"]`).value}`;
+    return `${eventsElements[0].querySelector(`.event__start-time`).dateTime}`;
   },
 });
-
