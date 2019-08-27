@@ -93,6 +93,15 @@ const renderRoutInfo = (container) => {
     .join(``));
 };
 
+const pointsExistingCheck = () => {
+  if (!pointsContainer.children.length) {
+    pointsContainer.innerHTML = `
+    <h2 class="visually-hidden">Trip events</h2>
+    <p class="trip-events__msg">Click New Event to create your first point</p>
+    `;
+  }
+};
+
 const siteTripInfoElement = document.querySelector(`.trip-info`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const siteTripEventsElement = document.querySelector(`.trip-events`);
@@ -103,4 +112,5 @@ renderFilter(siteTripControlsElement);
 render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
 const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
 pointMocks.forEach((pointMock) => renderTask(pointMock));
+pointsExistingCheck();
 renderRoutInfo(siteTripInfoElement);
