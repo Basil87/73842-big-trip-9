@@ -12,6 +12,7 @@ import {PointEdit} from '../src/components/point-edit.js';
 import {createFilterTemplate} from '../src/components/filter.js';
 import {createContainerTemplate} from '../src/components/container.js';
 import {Point} from '../src/components/point.js';
+import {TripController} from '../src/components/trip-controller.js';
 
 const POINTS_COUNT = 4;
 
@@ -44,13 +45,6 @@ const renderTask = (taskMock) => {
       document.addEventListener(`keydown`, onEscKeyDown);
     });
   });
-
-  // taskEditElement.querySelectorAll(`input`)
-  // .forEach((it) => {
-  //   it.addEventListener(`blur`, () => {
-  //     document.addEventListener(`keydown`, onEscKeyDown);
-  //   });
-  // });
 
   taskEditElement.querySelector(`.event`)
     .addEventListener(`submit`, () => {
@@ -112,5 +106,9 @@ renderFilter(siteTripControlsElement);
 render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
 const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
 pointMocks.forEach((pointMock) => renderTask(pointMock));
+
+const tripController = new TripController(pointsContainer, pointMocks);
+tripController.init();
 pointsExistingCheck();
+
 renderRoutInfo(siteTripInfoElement);

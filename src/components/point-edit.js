@@ -1,21 +1,14 @@
-import {util} from '../util.js';
+import {AbstractComponent} from '../components/abstract-component.js';
 
-export class PointEdit {
+export class PointEdit extends AbstractComponent {
   constructor({title, icon, dueDate, price, description, sightseeiengImg}) {
+    super();
     this._title = title;
     this._icon = icon;
     this._dueDate = new Date(dueDate);
     this._price = price;
     this._sightseeiengImg = sightseeiengImg;
     this.description = description;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = util.createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {
