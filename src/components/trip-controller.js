@@ -48,4 +48,8 @@ export class TripController extends AbstractComponent {
 
     util.render(this.container, pointElement, util.position.BEFOREEND);
   }
+
+  _initPoint() {
+    this._points.forEach((pointMock) => this.init(pointMock));
+  }
 }

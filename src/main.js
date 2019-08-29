@@ -63,7 +63,7 @@ render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
 const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
 const tripController = new TripController(pointsContainer, pointMocks);
 
-pointMocks.forEach((pointMock) => tripController.init(pointMock));
+tripController._initPoint();
 
 pointsExistingCheck();
 
