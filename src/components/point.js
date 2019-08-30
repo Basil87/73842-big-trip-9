@@ -1,20 +1,13 @@
-import {util} from '../util.js';
+import {AbstractComponent} from '../components/abstract-component.js';
 
-export class Point {
+export class Point extends AbstractComponent {
   constructor({title, icon, dueDate, price, additionalOptions}) {
+    super();
     this._title = title;
     this._icon = icon;
     this._dueDate = new Date(dueDate);
     this._price = price;
     this._additionalOptions = additionalOptions;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = util.createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   getTemplate() {
