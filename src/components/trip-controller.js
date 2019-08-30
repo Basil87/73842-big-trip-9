@@ -10,7 +10,11 @@ export class TripController extends AbstractComponent {
     this._points = points;
   }
 
-  init(taskMock) {
+  init() {
+    this._points.forEach((pointMock) => this._initPoint(pointMock));
+  }
+
+  _initPoint(taskMock) {
     const point = new Point(taskMock);
     const pointEdit = new PointEdit(taskMock);
     const pointElement = point.getElement();
@@ -47,9 +51,5 @@ export class TripController extends AbstractComponent {
       });
 
     util.render(this.container, pointElement, util.position.BEFOREEND);
-  }
-
-  _initPoint() {
-    this._points.forEach((pointMock) => this.init(pointMock));
   }
 }
