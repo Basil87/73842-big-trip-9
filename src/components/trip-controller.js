@@ -2,15 +2,18 @@ import {util} from '../util.js';
 import {AbstractComponent} from '../components/abstract-component.js';
 import {Point} from '../components/point.js';
 import {PointEdit} from '../components/point-edit.js';
+import {Sort} from '../components/sort.js';
 
 export class TripController extends AbstractComponent {
   constructor(container, points) {
     super();
     this.container = container;
     this._points = points;
+    this._sort = new Sort();
   }
 
   init() {
+    util.render(this._container, this._sort.getElement(), util.position.BEFOREBEGIN);
     this._points.forEach((pointMock) => this._initPoint(pointMock));
   }
 
@@ -51,5 +54,29 @@ export class TripController extends AbstractComponent {
       });
 
     util.render(this.container, pointElement, util.position.BEFOREEND);
+  }
+
+  _onSortLinkClick(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+
+    this.container.getElement().innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `time`:
+        const sortedByTimeTasks = this._tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+        sortedByTimeTasks.forEach((taskMock) => this._renderTask(taskMock));
+        break;
+      case `price`:
+        const sortedByPriceTasks = this._tasks.slice().sort((a, b) => a.price - b.price);
+        sortedByPriceTasks.forEach((taskMock) => this._renderTask(taskMock));
+        break;
+      case `event`:
+        this._tasks.forEach((taskMock) => this._renderTask(taskMock));
+        break;
+    }
   }
 }
