@@ -61,7 +61,7 @@ renderNavigation(siteTripControlsTitleElement);
 renderFilter(siteTripControlsElement);
 render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
 const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
-const tripController = new TripController(pointsContainer, pointMocks);
+const tripController = new TripController(siteTripEventsElement, pointMocks);
 
 tripController.init();
 

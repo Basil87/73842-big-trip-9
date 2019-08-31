@@ -1,7 +1,8 @@
 export const util = {
   position: {
     AFTERBEGIN: `afterbegin`,
-    BEFOREEND: `beforeend`
+    BEFOREEND: `beforeend`,
+    BEFOREBEGIN: `beforebegin`,
   },
   createElement(template) {
     const newElement = document.createElement(`div`);
