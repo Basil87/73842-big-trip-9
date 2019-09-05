@@ -51,6 +51,8 @@ export const getPoint = () => ({
     [`Add luggage `, `10`],
     [`Switch to comfort class `, `150`],
     [`Add meal `, `2`],
+    [`Choose seats`, `5`],
+    [`Travel by train`, `40`]
   ]),
 });
 

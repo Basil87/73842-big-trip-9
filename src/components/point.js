@@ -44,6 +44,6 @@ export class Point extends AbstractComponent {
           <span class="visually-hidden">Open event</span>
         </button>
       </div>
-    </li>`;
+      </li>`;
   }
 }
