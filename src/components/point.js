@@ -1,11 +1,12 @@
 import {AbstractComponent} from '../components/abstract-component.js';
 
 export class Point extends AbstractComponent {
-  constructor({title, icon, dueDate, price, additionalOptions}) {
+  constructor({title, icon, startTime, endTime, price, additionalOptions}) {
     super();
     this._title = title;
     this._icon = icon;
-    this._dueDate = new Date(dueDate);
+    this._startTime = new Date(startTime);
+    this._endTime = new Date(endTime);
     this._price = price;
     this._additionalOptions = additionalOptions;
   }
@@ -20,9 +21,9 @@ export class Point extends AbstractComponent {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${this._dueDate.getHours()} : ${this._dueDate.getMinutes()}</time>
+            <time class="event__start-time" datetime="${this._startTime}">${this._startTime.getHours()} : ${this._startTime.getMinutes()}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${this._dueDate.getHours() + 1} : ${this._dueDate.getMinutes() + 30}</time>
+            <time class="event__end-time" datetime="${this._endTime}">${this._endTime.getHours()} : ${this._endTime.getMinutes()}</time>
           </p>
           <p class="event__duration">1H 30M</p>
         </div>
@@ -33,11 +34,16 @@ export class Point extends AbstractComponent {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-          ${Array.from(this._additionalOptions).map((it) => `<span class="event__offer-title">${it[0]}</span>
+          ${this._additionalOptions.map((it) => {
+    if (it.isActive) {
+      return `<li class="event__offer">
+            <span class="event__offer-title">${it.label}</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">${it[1]}</span>`).slice(``)}
-          </li>
+            &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
+            </li>`;
+    }
+    return ``;
+  }).join(``)}
         </ul>
 
         <button class="event__rollup-btn" type="button">

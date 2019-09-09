@@ -4,28 +4,33 @@ import {Point} from '../components/point.js';
 import {PointEdit} from '../components/point-edit.js';
 
 export class PointController extends AbstractComponent {
-  constructor(container, data, onDataChange) {
+  constructor(container, data, onChangeView, onDataChange) {
     super();
     this._data = data;
-    this.pointContainer = container;
+    this.container = container;
+    this.pointContainer = this.container.getElement().querySelector(`.trip-events__list`);
+    this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
     this._point = new Point(data);
     this._pointEdit = new PointEdit(data);
     this._pointElement = this._point.getElement();
     this._pointEditElement = this._pointEdit.getElement();
+
+    this.create();
   }
 
   create() {
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        this.pointContainer.replaceChild(this._pointElement, this._pointEditElement);
+        this.setDefaultView();
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
 
     this._pointElement.querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, () => {
+        this._onChangeView();
         this.pointContainer.replaceChild(this._pointEditElement, this._pointElement);
         document.addEventListener(`keydown`, onEscKeyDown);
       });
@@ -51,13 +56,19 @@ export class PointController extends AbstractComponent {
       .addEventListener(`click`, () => {
 
         const formData = new FormData(this._pointEditElement.querySelector(`.event`));
-
+        const elementForm = this._pointEditElement.querySelector(`.event`);
+        const eventLabelElement = this._pointEditElement.querySelector(`.event__label`);
         const entry = {
-          destination: formData.get(`event-destination`),
+          title: eventLabelElement.textContent + ` ` + formData.get(`event-destination`),
           startTime: formData.get(`event-start-time`),
           endTime: formData.get(`event-end-time`),
           price: formData.get(`event-price`),
-          additionalOptions: formData.get(`*event-offer`),
+          additionalOptions: this._data.additionalOptions.map((it) => {
+            return {name: it.name, label: it.label, price: it.price, isActive: !!formData.get(it.name)};
+          }),
+          sightseeiengImg: elementForm.querySelector(`.event__photo`).src,
+          icon: formData.get(`event-type`),
+          destination: formData.get(`event-destination`),
         };
 
         this._onDataChange(entry, this._data);
@@ -66,5 +77,11 @@ export class PointController extends AbstractComponent {
       });
 
     util.render(this.pointContainer, this._pointElement, util.position.BEFOREEND);
+  }
+
+  setDefaultView() {
+    if (this.pointContainer.contains(this._pointEditElement)) {
+      this.pointContainer.replaceChild(this._pointElement, this._pointEditElement);
+    }
   }
 }

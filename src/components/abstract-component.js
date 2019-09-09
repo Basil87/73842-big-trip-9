@@ -18,10 +18,8 @@ export class AbstractComponent {
     return this._element;
   }
 
-  removeElement(element) {
-    if (element) {
-      element.remove();
-    }
+  removeElement() {
+    this._element = null;
   }
 
   getTemplate() {

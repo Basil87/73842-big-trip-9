@@ -45,15 +45,17 @@ export const getPoint = () => ({
     `Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus.`,
   ].map((it) => Math.round(Math.random()) ? it : ``).filter(Boolean).slice(0, 3),
-  dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+  startTime: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+  endTime: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
   price: 10 + Math.floor(Math.random() * 300),
-  additionalOptions: new Map([
-    [`Add luggage `, `10`],
-    [`Switch to comfort class `, `150`],
-    [`Add meal `, `2`],
-    [`Choose seats`, `5`],
-    [`Travel by train`, `40`]
-  ]),
+  additionalOptions: [
+    {name: `event-offer-luggage`, label: `Add luggage`, price: `10`, isActive: false},
+    {name: `event-offer-comfort`, label: `Switch to comfort class`, price: `150`, isActive: false},
+    {name: `event-offer-meal`, label: `Add meal`, price: `2`, isActive: false},
+    {name: `event-offer-seats`, label: `Choose seats`, price: `5`, isActive: false},
+    {name: `event-offer-train`, label: `Travel by train`, price: `40`, isActive: false},
+  ],
+  destination: `Saint Petersburg`,
 });
 
 export const getNavigation = () => ({
@@ -88,6 +90,6 @@ export const getRoutInfo = () => ({
   },
   travelDuration: () => {
     const eventsElements = document.querySelectorAll(`.trip-events__item`);
-    return `${eventsElements[0].querySelector(`.event__start-time`).dateTime}`;
+    return `${eventsElements[0].querySelector(`.event__start-time`).startTime}`;
   },
 });

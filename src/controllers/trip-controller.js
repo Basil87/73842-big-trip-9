@@ -11,7 +11,10 @@ export class TripController extends AbstractComponent {
     this._points = points;
     this._day = new Day();
     this._sort = new Sort();
+
+    this._subscriptions = [];
     this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
     this.pointContainer = this._day.getElement().querySelector(`.trip-events__list`);
   }
 
@@ -24,16 +27,27 @@ export class TripController extends AbstractComponent {
     .addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
   }
 
-  _onDataChange(newData, oldData) {
-    this._points[this._points.findIndex((it2) => it2 === oldData)] = newData;
-
+  _renderBoard() {
+    util.unrender(this._day.getElement());
+    this._day.removeElement();
+    util.render(this.container, this._day.getElement(), util.position.BEFOREEND);
+    this.pointContainer = this._day.getElement().querySelector(`.trip-events__list`);
     this._points.forEach((pointMock) => this._renderPoint(pointMock));
   }
 
+  _onDataChange(newData, oldData) {
+    this._points[this._points.findIndex((it2) => it2 === oldData)] = newData;
+
+    this._renderBoard();
+  }
+
+  _onChangeView() {
+    this._subscriptions.forEach((subscription) => subscription());
+  }
+
   _renderPoint(point) {
-    const pointController = new PointController(this.pointContainer, point, this._onDataChange /* , this._onChangeView */);
-    // this._subscriptions.push(taskController.setDefaultView.bind(taskController));
-    pointController.create();
+    const pointController = new PointController(this._day, point, this._onChangeView, this._onDataChange);
+    this._subscriptions.push(pointController.setDefaultView.bind(pointController));
   }
 
   _onSortLinkClick(evt) {
