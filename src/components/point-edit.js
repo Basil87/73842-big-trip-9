@@ -1,14 +1,19 @@
 import {AbstractComponent} from '../components/abstract-component.js';
 
 export class PointEdit extends AbstractComponent {
-  constructor({title, icon, dueDate, price, description, sightseeiengImg}) {
+  constructor({title, icon, startTime, endTime, price, description, sightseeiengImg, additionalOptions, destination}) {
     super();
     this._title = title;
     this._icon = icon;
-    this._dueDate = new Date(dueDate);
+    this._startTime = new Date(startTime);
+    this._endTime = new Date(endTime);
     this._price = price;
     this._sightseeiengImg = sightseeiengImg;
     this.description = description;
+    this._additionalOptions = additionalOptions;
+    this.destination = destination;
+
+    this. _changeEventType();
   }
 
   getTemplate() {
@@ -17,7 +22,7 @@ export class PointEdit extends AbstractComponent {
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
-              <span class="visually-hidden">Choose event type</span>
+              <span class="visually-hidden">${this._title}</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${this._icon}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
@@ -85,9 +90,9 @@ export class PointEdit extends AbstractComponent {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
-              Sightseeing at
+            ${this._icon.charAt(0).toUpperCase() + this._icon.substr(1)} to
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Saint Petersburg" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this.destination}" list="destination-list-1">
             <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -99,12 +104,12 @@ export class PointEdit extends AbstractComponent {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startTime}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endTime}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -137,50 +142,14 @@ export class PointEdit extends AbstractComponent {
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                <label class="event__offer-label" for="event-offer-luggage-1">
-                  <span class="event__offer-title">Add luggage</span>
+              ${this._additionalOptions.map((it, i) => (`<div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="${it.name} - ${i}" type="checkbox" name="${it.name}" ${it.isActive ? `checked` : ``}>
+                <label class="event__offer-label" for="${it.name} - ${i}">
+                  <span class="event__offer-title">${it.label}</span>
                   &plus;
-                  &euro;&nbsp;<span class="event__offer-price">30</span>
+                  &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
                 </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                <label class="event__offer-label" for="event-offer-comfort-1">
-                  <span class="event__offer-title">Switch to comfort class</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">100</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                <label class="event__offer-label" for="event-offer-meal-1">
-                  <span class="event__offer-title">Add meal</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">15</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                <label class="event__offer-label" for="event-offer-seats-1">
-                  <span class="event__offer-title">Choose seats</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">5</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                <label class="event__offer-label" for="event-offer-train-1">
-                  <span class="event__offer-title">Travel by train</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">40</span>
-                </label>
-              </div>
+              </div>`)).join(``)}
             </div>
           </section>
 
@@ -202,5 +171,22 @@ export class PointEdit extends AbstractComponent {
       </form>
     </li>
   `;
+  }
+
+  _changeEventType() {
+    const editElement = this.getElement();
+    const eventTypeIconElement = editElement.querySelector(`.event__type-icon`);
+    const eventLabelElement = editElement.querySelector(`.event__label`);
+    const eventToggleElement = editElement.querySelector(`.event__type-toggle`);
+    editElement.querySelector(`.event__type-list`).addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.classList.contains(`event__type-label`)) {
+        const inputValue = evt.target.previousElementSibling.value;
+        evt.target.previousElementSibling.checked = true;
+        eventTypeIconElement.src = `img/icons/${inputValue}.png`;
+        eventLabelElement.textContent = `${evt.target.textContent} to`;
+        eventToggleElement.checked = false;
+      }
+    });
   }
 }

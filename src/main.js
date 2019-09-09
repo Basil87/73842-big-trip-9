@@ -6,18 +6,13 @@ import {getRoutInfo} from '../src/data.js';
 import {createRoutTemplate} from '../src/components/rout.js';
 import {createNavigationTemplate} from '../src/components/navigation.js';
 import {createFilterTemplate} from '../src/components/filter.js';
-import {createContainerTemplate} from '../src/components/container.js';
-import {TripController} from '../src/components/trip-controller.js';
+import {TripController} from '../src/controllers/trip-controller.js';
 
 const POINTS_COUNT = 4;
 
 const pointMocks = new Array(POINTS_COUNT)
                 .fill(``)
                 .map(getPoint);
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 const renderFilter = (container) => {
   container.insertAdjacentHTML(`beforeend`, new Array(1)
@@ -43,15 +38,6 @@ const renderRoutInfo = (container) => {
     .join(``));
 };
 
-const pointsExistingCheck = () => {
-  if (!pointsContainer.children.length) {
-    pointsContainer.innerHTML = `
-    <h2 class="visually-hidden">Trip events</h2>
-    <p class="trip-events__msg">Click New Event to create your first point</p>
-    `;
-  }
-};
-
 const siteTripInfoElement = document.querySelector(`.trip-info`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const siteTripEventsElement = document.querySelector(`.trip-events`);
@@ -59,12 +45,9 @@ const siteTripControlsTitleElement = siteTripControlsElement.querySelector(`h2`)
 
 renderNavigation(siteTripControlsTitleElement);
 renderFilter(siteTripControlsElement);
-render(siteTripEventsElement, createContainerTemplate(), `beforeend`);
-const pointsContainer = siteTripEventsElement.querySelector(`.trip-events__list`);
+
 const tripController = new TripController(siteTripEventsElement, pointMocks);
 
 tripController.init();
-
-pointsExistingCheck();
 
 renderRoutInfo(siteTripInfoElement);

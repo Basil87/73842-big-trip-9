@@ -4,7 +4,8 @@
   "private": true,
   "description": "Личный проект «Большое путешествие» от HTML Academy",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack -p",
+    "watch": "webpack --watch",
     "eslint": "eslint src/**/*.js",
     "start": "webpack-dev-server --open",
     "test": "npm run eslint"
