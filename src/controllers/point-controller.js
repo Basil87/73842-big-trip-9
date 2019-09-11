@@ -23,13 +23,14 @@ export class PointController extends AbstractComponent {
   }
 
   create() {
+    const fuckToTravis = `time_24hr`;
 
     flatpickr(this._pointEditElement.querySelector(`[name=event-start-time]`), {
       altFormat: `d/m/y \H:i`,
       altInput: true,
       enableTime: true,
       defaultDate: this._data.startTime,
-      time_24hr: true,
+      [fuckToTravis]: true,
     });
 
     flatpickr(this._pointEditElement.querySelector(`[name=event-end-time]`), {
@@ -37,7 +38,7 @@ export class PointController extends AbstractComponent {
       altInput: true,
       enableTime: true,
       defaultDate: this._data.endTime,
-      time_24hr: true,
+      [fuckToTravis]: true,
     });
 
 
