@@ -2,6 +2,9 @@ import {AbstractComponent} from '../components/abstract-component.js';
 import {util} from '../util.js';
 import {Point} from '../components/point.js';
 import {PointEdit} from '../components/point-edit.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
 
 export class PointController extends AbstractComponent {
   constructor(container, data, onChangeView, onDataChange) {
@@ -20,6 +23,23 @@ export class PointController extends AbstractComponent {
   }
 
   create() {
+
+    flatpickr(this._pointEditElement.querySelector(`[name=event-start-time]`), {
+      altFormat: `d/m/y \H:i`,
+      altInput: true,
+      enableTime: true,
+      defaultDate: this._data.startTime,
+      time_24hr: true,
+    });
+
+    flatpickr(this._pointEditElement.querySelector(`[name=event-end-time]`), {
+      altFormat: `d/m/y H:i`,
+      altInput: true,
+      enableTime: true,
+      defaultDate: this._data.endTime,
+      time_24hr: true,
+    });
+
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {

@@ -45,8 +45,8 @@ export const getPoint = () => ({
     `Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus.`,
   ].map((it) => Math.round(Math.random()) ? it : ``).filter(Boolean).slice(0, 3),
-  startTime: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
-  endTime: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+  startTime: Date.now() + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+  endTime: Date.now() + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
   price: 10 + Math.floor(Math.random() * 300),
   additionalOptions: [
     {name: `event-offer-luggage`, label: `Add luggage`, price: `10`, isActive: false},
