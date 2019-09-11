@@ -1,14 +1,17 @@
 import {AbstractComponent} from '../components/abstract-component.js';
+import moment from 'moment';
 
 export class Point extends AbstractComponent {
   constructor({title, icon, startTime, endTime, price, additionalOptions}) {
     super();
     this._title = title;
     this._icon = icon;
-    this._startTime = new Date(startTime);
-    this._endTime = new Date(endTime);
+    this._startTime = moment(startTime);
+    this._endTime = moment(endTime);
     this._price = price;
     this._additionalOptions = additionalOptions;
+
+    this._duration = moment.duration(this._endTime.diff(this._startTime)).asMilliseconds();
   }
 
   getTemplate() {
@@ -21,11 +24,11 @@ export class Point extends AbstractComponent {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${this._startTime}">${this._startTime.getHours()} : ${this._startTime.getMinutes()}</time>
+            <time class="event__start-time" datetime="${this._startTime}">${this._startTime.format(`HH : mm`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${this._endTime}">${this._endTime.getHours()} : ${this._endTime.getMinutes()}</time>
+            <time class="event__end-time" datetime="${this._endTime}">${this._endTime.format(`HH : mm`)}</time>
           </p>
-          <p class="event__duration">1H 30M</p>
+          <p class="event__duration">${moment(this._duration).format(`HH[H] mm[M]`)}</p>
         </div>
 
         <p class="event__price">
