@@ -11,7 +11,7 @@ export class Point extends AbstractComponent {
     this._price = price;
     this._additionalOptions = additionalOptions;
 
-    this._duration = moment.duration(this._endTime.diff(this._startTime)).asMilliseconds();
+    this._duration = moment.duration(this._endTime.diff(this._startTime));
   }
 
   getTemplate() {
@@ -28,7 +28,7 @@ export class Point extends AbstractComponent {
             &mdash;
             <time class="event__end-time" datetime="${this._endTime}">${this._endTime.format(`HH : mm`)}</time>
           </p>
-          <p class="event__duration">${moment(this._duration).format(`HH[H] mm[M]`)}</p>
+          <p class="event__duration">${this._duration.hours()}H ${this._duration.minutes()}M</p>
         </div>
 
         <p class="event__price">
