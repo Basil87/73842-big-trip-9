@@ -11,7 +11,7 @@ export class TripController extends AbstractComponent {
     this._points = points;
     this._day = new Day();
     this._sort = new Sort();
-
+    this._creatingPoint = null;
     this._subscriptions = [];
     this._onDataChange = this._onDataChange.bind(this);
     this._onChangeView = this._onChangeView.bind(this);
@@ -21,10 +21,40 @@ export class TripController extends AbstractComponent {
   init() {
     util.render(this.container, this._sort.getElement(), util.position.AFTERBEGIN);
     util.render(this.container, this._day.getElement(), util.position.BEFOREEND);
+
     this._points.forEach((pointMock) => this._renderPoint(pointMock));
 
     this._sort.getElement()
     .addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+  }
+
+  hide() {
+    this.container.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this.container.classList.remove(`visually-hidden`);
+  }
+
+  createPoint() {
+
+    if (this._creatingPoint) {
+      return;
+    }
+
+    const defaultTask = {
+      title: ``,
+      icon: `flight`,
+      startTime: new Date(),
+      endTime: new Date(),
+      price: ``,
+      sightseeiengImg: ``,
+      description: ``,
+      additionalOptions: [],
+      destination: ``,
+    };
+
+    this._creatingPoint = new PointController(this._day, defaultTask, `adding`, this._onChangeView, this._onDataChange);
   }
 
   _renderBoard() {
@@ -36,7 +66,16 @@ export class TripController extends AbstractComponent {
   }
 
   _onDataChange(newData, oldData) {
-    this._points[this._points.findIndex((it2) => it2 === oldData)] = newData;
+    const index = this._points.findIndex((point) => point === oldData);
+
+    if (newData === null) {
+      this._points = [...this._points.slice(0, index), ...this._points.slice(index + 1)];
+    } else if (oldData === null) {
+      this._creatingPoint = null;
+      this._points = [newData, ...this._points];
+    } else {
+      this._points[index] = newData;
+    }
 
     this._renderBoard();
   }
@@ -46,7 +85,7 @@ export class TripController extends AbstractComponent {
   }
 
   _renderPoint(point) {
-    const pointController = new PointController(this._day, point, this._onChangeView, this._onDataChange);
+    const pointController = new PointController(this._day, point, `default`, this._onChangeView, this._onDataChange);
     this._subscriptions.push(pointController.setDefaultView.bind(pointController));
   }
 

@@ -6,8 +6,13 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
+const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export class PointController extends AbstractComponent {
-  constructor(container, data, onChangeView, onDataChange) {
+  constructor(container, data, mode, onChangeView, onDataChange) {
     super();
     this._data = data;
     this.container = container;
@@ -19,18 +24,25 @@ export class PointController extends AbstractComponent {
     this._pointElement = this._point.getElement();
     this._pointEditElement = this._pointEdit.getElement();
 
-    this.create();
+    this.create(mode);
   }
 
-  create() {
-    const fuckToTravis = `time_24hr`;
+  create(mode) {
+
+    let renderPosition = util.position.BEFOREEND;
+    let currentView = this._point;
+
+    if (mode === Mode.ADDING) {
+      renderPosition = util.position.AFTERBEGIN;
+      currentView = this._pointEdit;
+    }
 
     flatpickr(this._pointEditElement.querySelector(`[name=event-start-time]`), {
       altFormat: `d/m/y \H:i`,
       altInput: true,
       enableTime: true,
       defaultDate: this._data.startTime,
-      [fuckToTravis]: true,
+      [`time_24hr`]: true,
     });
 
     flatpickr(this._pointEditElement.querySelector(`[name=event-end-time]`), {
@@ -38,7 +50,7 @@ export class PointController extends AbstractComponent {
       altInput: true,
       enableTime: true,
       defaultDate: this._data.endTime,
-      [fuckToTravis]: true,
+      [`time_24hr`]: true,
     });
 
 
@@ -92,12 +104,17 @@ export class PointController extends AbstractComponent {
           destination: formData.get(`event-destination`),
         };
 
-        this._onDataChange(entry, this._data);
+        this._onDataChange(entry, mode === `default` ? this._data : null);
 
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
 
-    util.render(this.pointContainer, this._pointElement, util.position.BEFOREEND);
+    this._pointEditElement.querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, () => {
+        this._onDataChange(null, this._data);
+      });
+
+    util.render(this.pointContainer, currentView.getElement(), renderPosition);
   }
 
   setDefaultView() {
