@@ -15,8 +15,8 @@ export class PointController extends AbstractComponent {
   constructor(container, data, mode, onChangeView, onDataChange) {
     super();
     this._data = data;
-    this.container = container;
-    this.pointContainer = this.container.getElement().querySelector(`.trip-events__list`);
+    this._container = container;
+    this.pointContainer = this._container.getElement().querySelector(`.trip-events__list`);
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
     this._point = new Point(data);
@@ -56,7 +56,7 @@ export class PointController extends AbstractComponent {
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        this.setDefaultView();
+        this._pointEditElement.replaceWith(this._pointElement);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };

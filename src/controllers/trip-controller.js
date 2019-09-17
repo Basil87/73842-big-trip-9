@@ -7,7 +7,7 @@ import {PointController} from '../controllers/point-controller.js';
 export class TripController extends AbstractComponent {
   constructor(container, points) {
     super();
-    this.container = container;
+    this._container = container;
     this._points = points;
     this._day = new Day();
     this._sort = new Sort();
@@ -19,8 +19,8 @@ export class TripController extends AbstractComponent {
   }
 
   init() {
-    util.render(this.container, this._sort.getElement(), util.position.AFTERBEGIN);
-    util.render(this.container, this._day.getElement(), util.position.BEFOREEND);
+    util.render(this._container, this._sort.getElement(), util.position.AFTERBEGIN);
+    util.render(this._container, this._day.getElement(), util.position.BEFOREEND);
 
     this._points.forEach((pointMock) => this._renderPoint(pointMock));
 
@@ -29,11 +29,11 @@ export class TripController extends AbstractComponent {
   }
 
   hide() {
-    this.container.classList.add(`visually-hidden`);
+    this._container.classList.add(`visually-hidden`);
   }
 
   show() {
-    this.container.classList.remove(`visually-hidden`);
+    this._container.classList.remove(`visually-hidden`);
   }
 
   createPoint() {
@@ -60,7 +60,7 @@ export class TripController extends AbstractComponent {
   _renderBoard() {
     util.unrender(this._day.getElement());
     this._day.removeElement();
-    util.render(this.container, this._day.getElement(), util.position.BEFOREEND);
+    util.render(this._container, this._day.getElement(), util.position.BEFOREEND);
     this.pointContainer = this._day.getElement().querySelector(`.trip-events__list`);
     this._points.forEach((pointMock) => this._renderPoint(pointMock));
   }
@@ -90,6 +90,33 @@ export class TripController extends AbstractComponent {
   }
 
   _onSortLinkClick(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+
+    this.pointContainer.innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `time`:
+        const sortedByTimeTasks = this._points.slice().sort((a, b) => a.dueDate - b.dueDate);
+        sortedByTimeTasks.forEach((taskMock) => this._renderPoint(taskMock));
+        evt.target.previousElementSibling.checked = true;
+        break;
+      case `price`:
+        const sortedByPriceTasks = this._points.slice().sort((a, b) => a.price - b.price);
+        sortedByPriceTasks.forEach((taskMock) => this._renderPoint(taskMock));
+        evt.target.previousElementSibling.checked = true;
+        break;
+      case `event`:
+        this._points.forEach((taskMock) => this._renderPoint(taskMock));
+        evt.target.previousElementSibling.checked = true;
+        break;
+    }
+  }
+
+  _onFilterLinkClick(evt) {
     evt.preventDefault();
 
     if (evt.target.tagName !== `LABEL`) {
