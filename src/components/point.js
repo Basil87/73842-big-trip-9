@@ -38,9 +38,9 @@ export class Point extends AbstractComponent {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           ${this._additionalOptions.map((it) => {
-    if (it.isActive) {
+    if (it.accepted) {
       return `<li class="event__offer">
-            <span class="event__offer-title">${it.label}</span>
+            <span class="event__offer-title">${it.title}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${it.price}</span>
             </li>`;

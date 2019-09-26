@@ -9,6 +9,7 @@ import {Navigation} from '../src/components/navigation.js';
 import {Statistics} from '../src/components/statistics.js';
 import {Filter} from '../src/components/filter.js';
 import {TripController} from '../src/controllers/trip-controller.js';
+import {API} from '../src/api.js';
 
 const POINTS_COUNT = 4;
 
@@ -39,9 +40,36 @@ util.render(siteTripControlsElement, navigation.getElement(), util.position.AFTE
 util.render(siteTripControlsElement, filter.getElement(), util.position.BEFOREEND);
 util.render(pageBodyContainer, statistics.getElement(), util.position.BEFOREEND);
 
-const tripController = new TripController(siteTripEventsElement, pointMocks);
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip/`;
 
-tripController.init();
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+// const onDataChange = (actionType, update) => {
+//   switch (actionType) {
+//     case `update`:
+//       api.updatePoint({
+//         id: update.id,
+//         data: update.toRAW()
+//       }).then((tasks) => tripController.init(tasks));
+//       break;
+//     case `delete`:
+//       api.updatePoint({
+//         id: update.id
+//       })
+//         .then(() => api.getPoints())
+//         .then((tasks) => tripController.init(tasks));
+//       break;
+//   }
+// };
+
+const tripController = new TripController(siteTripEventsElement);
+api.getPoints().then((points) => {
+  return tripController.init(points);
+});
+// const tripController = new TripController(siteTripEventsElement, pointMocks);
+
+// tripController.init();
 renderRoutInfo(siteTripInfoElement);
 
 navigation.getElement().addEventListener(`click`, (evt) => {

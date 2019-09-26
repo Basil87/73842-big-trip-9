@@ -5,20 +5,21 @@ import {Sort} from '../components/sort.js';
 import {PointController} from '../controllers/point-controller.js';
 
 export class TripController extends AbstractComponent {
-  constructor(container, points) {
+  constructor(container, onDataChange) {
     super();
     this._container = container;
-    this._points = points;
     this._day = new Day();
     this._sort = new Sort();
     this._creatingPoint = null;
     this._subscriptions = [];
-    this._onDataChange = this._onDataChange.bind(this);
+    this._onDataChange = onDataChange;
     this._onChangeView = this._onChangeView.bind(this);
     this.pointContainer = this._day.getElement().querySelector(`.trip-events__list`);
+
   }
 
-  init() {
+  init(points) {
+    this._points = points;
     util.render(this._container, this._sort.getElement(), util.position.AFTERBEGIN);
     util.render(this._container, this._day.getElement(), util.position.BEFOREEND);
 

@@ -1,4 +1,5 @@
 export const getPoint = () => ({
+  id: Math.floor(Math.random() * 11),
   title: [
     `Taxi to airport`,
     `Flight to Geneva`,
@@ -49,11 +50,11 @@ export const getPoint = () => ({
   endTime: Date.now() + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
   price: 10 + Math.floor(Math.random() * 300),
   additionalOptions: [
-    {name: `event-offer-luggage`, label: `Add luggage`, price: `10`, isActive: false},
-    {name: `event-offer-comfort`, label: `Switch to comfort class`, price: `150`, isActive: false},
-    {name: `event-offer-meal`, label: `Add meal`, price: `2`, isActive: false},
-    {name: `event-offer-seats`, label: `Choose seats`, price: `5`, isActive: false},
-    {name: `event-offer-train`, label: `Travel by train`, price: `40`, isActive: false},
+    {title: `Add luggage`, price: `10`, accepted: false},
+    {title: `Switch to comfort class`, price: `150`, accepted: false},
+    {title: `Add meal`, price: `2`, accepted: false},
+    {title: `Choose seats`, price: `5`, accepted: false},
+    {title: `Travel by train`, price: `40`, accepted: false},
   ],
   destination: `Saint Petersburg`,
 });
@@ -88,8 +89,8 @@ export const getRoutInfo = () => ({
 
     return rout.join(` - `);
   },
-  travelDuration: () => {
-    const eventsElements = document.querySelectorAll(`.trip-events__item`);
-    return `${eventsElements[0].querySelector(`.event__start-time`).startTime}`;
-  },
+  // travelDuration: () => {
+  //   const eventsElements = document.querySelectorAll(`.trip-events__item`);
+  //   return `${eventsElements[0].querySelector(`.event__start-time`).startTime}`;
+  // },
 });

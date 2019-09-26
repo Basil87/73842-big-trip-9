@@ -97,7 +97,7 @@ export class PointController extends AbstractComponent {
           endTime: formData.get(`event-end-time`),
           price: formData.get(`event-price`),
           additionalOptions: this._data.additionalOptions.map((it) => {
-            return {name: it.name, label: it.label, price: it.price, isActive: !!formData.get(it.name)};
+            return {name: it.name, label: it.label, price: it.price, accepted: !!formData.get(it.name)};
           }),
           sightseeiengImg: elementForm.querySelector(`.event__photo`).src,
           icon: formData.get(`event-type`),
@@ -111,7 +111,7 @@ export class PointController extends AbstractComponent {
 
     this._pointEditElement.querySelector(`.event__reset-btn`)
       .addEventListener(`click`, () => {
-        this._onDataChange(null, this._data);
+        this._onDataChange(`delete`, this._data);
       });
 
     util.render(this.pointContainer, currentView.getElement(), renderPosition);
